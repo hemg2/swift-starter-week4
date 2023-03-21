@@ -19,16 +19,17 @@ final class Routine {
     
     func start(bodyCondition: BodyCondition) {
         print("루틴을 몇 번 반복할까요?", terminator: " ")
-        var normalInput: Bool = true
+        var isNormalInput: Bool = true
         
-        while normalInput == true {
-        do {
-            try startExerciseRoutine(with: bodyCondition)
-            normalInput = false
+        while isNormalInput == true {
+            do {
+                try startExerciseRoutine(with: bodyCondition)
+                isNormalInput = false
             } catch ActivityError.overFatigue {
                 print("피로도가 100(이/가)이 넘어 운동진행 불가")
                 bodyCondition.currentCondition()
-            } catch ActivityError.inputValue {
+                break
+            } catch ActivityError.inputValueNumber {
                 print("잘못된 입력 형식입니다. 다시 입력해주세요.")
             } catch {
                 print(error)
@@ -39,8 +40,9 @@ final class Routine {
     private func startExerciseRoutine(with bodyCondition: BodyCondition) throws {
         guard let input = readLine(),
               let routineCountIntInput = Int(input),
-              routineCountIntInput > 0
-        else { throw ActivityError.inputValue }
+              routineCountIntInput > 0 else {
+        throw ActivityError.inputValueNumber
+        }
         for routineCount in 1...routineCountIntInput {
             print("\(routineCount) 번째 hellRoutine을(를) 시작합니다.")
             try checkFatigueExercise(bodyCondition: bodyCondition)
